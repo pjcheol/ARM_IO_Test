@@ -50,28 +50,47 @@ void 	PIT_Interrupt_Setup(void)
 {
 	unsigned int	tmp=0;
 
-     rAIC_IECR = (1<<1);
-     rAIC_SMR1 = (1<<5) +  (7<<0);  //Edge Trigger, Prior 7
-     rAIC_SVR1 = (unsigned)Isr_PIT;
-     tmp=(48000000/16/100)&0xFFFFF;         // T=30Hz
-     rPIT_MR=(1<<25)+(1<<24)+(tmp<<0);      // Enable PIT, Disable Interrupt
+    rAIC_IECR = (1<<1);
+
+	// System Advanced Interrupt Controller
+    rAIC_SMR1 = (1<<5) +  (7<<0);  //Edge Trigger, Prior 7
+    rAIC_SVR1 = (unsigned)Isr_PIT;
+
+	// System Periodic Interval Timer (PIT) Mode Register (MR)
+
+	// PITEN(24) - Periodic Interval Timer Enabled
+	// unsigned int PITEN = (1<<24);
+
+	// PITIEN(25) - Periodic Interval Timer Interrupt Enabled
+	// unsigned int PITIEN = (1<<25);
+
+	// PIV(19:0) - Periodic Interval Time
+	// will be compared with 20-bit CPIV (Counter of Periodic Interval Timer)
+    tmp=(48000000/16/100)&0xFFFFF;         // T=30Hz
+	// unsigned int PIV = 0;
+	// PIV = (48000000/16/100)&0xFFFFF;
+
+    rPIT_MR=(1<<25)+(1<<24)+(tmp<<0);      // Enable PIT, Disable Interrupt
+	// rPIT_MR = PITIEN + PITEN + PIV;
 }
 
 
 void Port_Setup(void)
 {
+	// PMC (Power Management Clock) enables peripheral clocks
 	AT91F_PMC_EnablePeriphClock ( AT91C_BASE_PMC, 1 << AT91C_ID_PIOB );
 	AT91F_PMC_EnablePeriphClock ( AT91C_BASE_PMC, 1 << AT91C_ID_PIOA );
 	
-	
+	// Enable PIO in output mode: Port A 0-7
 	AT91F_PIO_CfgOutput( AT91C_BASE_PIOA,  PORTA);
 
-	
-	AT91F_PIO_CfgOutput( AT91C_BASE_PIOB, LED1|LED2|LED3 );
-	AT91F_PIO_CfgPullup( AT91C_BASE_PIOB, LED1|LED2|LED3 );
+	// LED (Port B: 28-30)
+	AT91F_PIO_CfgOutput( AT91C_BASE_PIOB, LED1|LED2|LED3 ); // output mode
+	AT91F_PIO_CfgPullup( AT91C_BASE_PIOB, LED1|LED2|LED3 ); // pull-up
 
-	AT91F_PIO_CfgInput( AT91C_BASE_PIOA, SW1|SW2 );
-	AT91F_PIO_CfgPullup( AT91C_BASE_PIOA, SW1|SW2 );
+	// Switch (Port A: 8,9)
+	AT91F_PIO_CfgInput( AT91C_BASE_PIOA, SW1|SW2 ); // output mode
+	AT91F_PIO_CfgPullup( AT91C_BASE_PIOA, SW1|SW2 ); // pull-up
 
 //AT91F_PIO_SetOutput(AT91C_BASE_PIOA, (1<<13));
 //AT91F_PIO_ClearOutput(AT91C_BASE_PIOA, (1<<13));
@@ -133,60 +152,17 @@ unsigned char Result=0;
                    
 int main()
 {
-	char	Count=0;
-	unsigned int	Key_Data=0;
-
+	int i = 0;
   	Port_Setup();
 	
-  	DBG_Init();
-	PIT_Interrupt_Setup();
-	//Uart_Printf("LCD Initial Complete\n\r");
-
 	while(1) 
 	{
-	
-//		rPIO_CODR_B=(LED1|LED2|LED3);
-		rPIO_CODR_B=(LED2|LED3);
-		Delay(60000);
-		Delay(60000);
-		Delay(60000);		
-		Delay(60000);		
-//		rPIO_SODR_B=(LED1|LED2|LED3);
-		rPIO_SODR_B=(LED2|LED3);
-		Delay(60000);
-		Delay(60000);
-		Delay(60000);		
-		Delay(60000);
-	
-	}
-		
+		// LED off
+		rPIO_CODR_B=(LED1|LED2|LED3);
+		for(i = 0; i < 10; ++i) Delay(100000);
 
-/*	
-	rPIO_CODR_A=PORTA;
-	rPIO_SODR_A = (1<<Count);
-
-	while(1) 
-	{
-
-		Key_Data=Switch_Check();
-		if(Key_Data==LEFT && Key_Count==100)		//SW1 Push
-		{
-			rPIO_CODR_A=PORTA;
-			if(Count==7) Count=0;
-			else Count++;
-			rPIO_SODR_A = (0x01<<Count);
-		}
-		else if(Key_Data==RIGHT && Key_Count==100) //SW2 Push
-		{
-			rPIO_CODR_A=PORTA;
-			if(Count==0) Count=7;
-			else Count--;
-			rPIO_SODR_A = (0x80>>(7-Count));		
-		}
-
-	}
-
-*/
-
-	
+		// LED on
+		rPIO_SODR_B=(LED1|LED2|LED3);
+		for(i = 0; i < 10; ++i) Delay(100000);
+	}	
 }
