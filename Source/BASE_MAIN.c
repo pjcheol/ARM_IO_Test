@@ -154,15 +154,38 @@ int main()
 {
 	int i = 0;
   	Port_Setup();
-	
+
+	rPIO_CODR_B=(LED1|LED2|LED3);
+		for(i = 0; i < 10; ++i) Delay(100000);
+	int m=0;
+
 	while(1) 
 	{
-		// LED off
-		rPIO_CODR_B=(LED1|LED2|LED3);
-		for(i = 0; i < 10; ++i) Delay(100000);
+		
+		
+		m=m%3;
+		
+		
+ 		switch(m){
 
-		// LED on
-		rPIO_SODR_B=(LED1|LED2|LED3);
-		for(i = 0; i < 10; ++i) Delay(100000);
+		case 0:    rPIO_SODR_B=(LED1);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			rPIO_CODR_B=(LED1);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			break;
+		case 1:    rPIO_SODR_B=(LED2);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			rPIO_CODR_B=(LED2);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			break;	
+		case 2:    rPIO_SODR_B=(LED3);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			rPIO_CODR_B=(LED3);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			break;
+		}	
+
+
+		m++;
 	}	
 }
