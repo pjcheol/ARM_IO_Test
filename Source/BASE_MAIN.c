@@ -159,7 +159,7 @@ int main()
 	{
 		
 		
-		m=m%3;
+		m=m%6;
 		
 		
  		switch(m){
@@ -179,9 +179,22 @@ int main()
 			rPIO_CODR_B=(LED1);
 			for(i = 0; i < 10; ++i) Delay(100000);
 			break;
+		case 3:    rPIO_SODR_B=(LED1);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			rPIO_CODR_B=(LED1);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			break;
+		case 4:    rPIO_SODR_B=(LED2);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			rPIO_CODR_B=(LED2);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			break;	
+		case 5:    rPIO_SODR_B=(LED3);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			rPIO_CODR_B=(LED3);
+			for(i = 0; i < 10; ++i) Delay(100000);
+			break;
 		}	
-
-
 		m++;
 	}	
 }
