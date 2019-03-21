@@ -99,7 +99,6 @@ void Port_Setup(void)
 /*
 void Read_For_Setup_CMOS(void)
 {
-
 	//Read address Reset
 	rPIO_CODR_A=FIFO_RD_RST;			
 	rPIO_SODR_A=FIFO_RD;
@@ -107,7 +106,6 @@ void Read_For_Setup_CMOS(void)
 	rPIO_SODR_A=FIFO_RD;
 	rPIO_CODR_A=FIFO_RD;
 	rPIO_SODR_A=FIFO_RD_RST;
-
 	//Write On		
 	//rPIO_SODR_A=XCLK_ON;
 	rPIO_SODR_A=HREF_SYNC;
@@ -122,9 +120,7 @@ void Read_For_Setup_CMOS(void)
 			
 	//CS_LOW
 	rPIO_CODR_A=FIFO_CS;
-
 }
-
 void CMOS_Read_Clk(void)
 {
 	rPIO_SODR_A=FIFO_RD;
@@ -168,9 +164,9 @@ int main()
 		
  		switch(m){
 
-		case 0:    rPIO_SODR_B=(LED1);
+		case 0:   rPIO_SODR_B=(LED3);
 			for(i = 0; i < 10; ++i) Delay(100000);
-			rPIO_CODR_B=(LED1);
+			rPIO_CODR_B=(LED3);
 			for(i = 0; i < 10; ++i) Delay(100000);
 			break;
 		case 1:    rPIO_SODR_B=(LED2);
@@ -178,9 +174,9 @@ int main()
 			rPIO_CODR_B=(LED2);
 			for(i = 0; i < 10; ++i) Delay(100000);
 			break;	
-		case 2:    rPIO_SODR_B=(LED3);
+		case 2:  	rPIO_SODR_B=(LED1);
 			for(i = 0; i < 10; ++i) Delay(100000);
-			rPIO_CODR_B=(LED3);
+			rPIO_CODR_B=(LED1);
 			for(i = 0; i < 10; ++i) Delay(100000);
 			break;
 		}	
